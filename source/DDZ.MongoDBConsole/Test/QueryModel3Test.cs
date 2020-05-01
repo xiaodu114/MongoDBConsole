@@ -357,7 +357,7 @@ namespace DDZ.MongoDBConsole.Test
 
         public static string Test4()
         {
-            // { "$and" : [{ "AppCode" : "OperationControlCooperation" }, { "BusinessModuleId" : "1c9adc31-8587-11e8-8d4d-00155d0a1925" }, { "GroupCode" : "1c9adc31-8587-11e8-8d4d-00155d0a1925" }, { "OrganizationId" : "53305584107157536" }, { "SceneCode" : "53305584107157536" }, { "SceneType" : "Organization" }, { "ModelId" : "333517087378771968" }, { "CreateUserId" : "129034539499524096" }, { "FormValues" : { "$elemMatch" : { "key" : "1531120324893", "value" : /00/i } } }, { "FormValues" : { "$elemMatch" : { "key" : "1531120511867", "value" : { "$ne" : "", "$gte" : "2020-04-01 17:37:05 00:00" } } } }, { "FormValues" : { "$elemMatch" : { "key" : "1531120511867", "value" : { "$ne" : "", "$lte" : "2020-04-24 17:37:09 23:59" } } } }] }
+            // { "$and" : [{ "FormId" : "CarInfo" }, { "Level1" : "Apple" }, { "CreateDate" : { "$gte" : "2010-01-01", "$lte" : "2020-12-31" } }, { "FormValues" : { "$elemMatch" : { "key" : "key1", "value" : { "$ne" : "", "$lte" : "2020" } } } }, { "FormValues" : { "$elemMatch" : { "key" : "key2", "value" : { "$gte" : "2000", "$lte" : "2020" } } } }] }
             QueryModel3 queryModel = new QueryModel3()
             {
                 QueryUnits = new List<QueryUnit>()
