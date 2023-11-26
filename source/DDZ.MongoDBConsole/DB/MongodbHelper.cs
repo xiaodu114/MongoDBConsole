@@ -28,7 +28,7 @@ namespace DDZ.MongoDBConsole.DB
         public static FilterDefinition<T> ToMogodbFilter<T>(QueryOperatorKind operatorType, string key, object value)
         {
             if (string.IsNullOrEmpty(key)) throw new ArgumentNullException("key");
-            FilterDefinition<T> filter = null;
+            FilterDefinition<T> filter;
             switch (operatorType)
             {
                 case QueryOperatorKind.NE:
@@ -99,6 +99,11 @@ namespace DDZ.MongoDBConsole.DB
                 List<FilterDefinition<T>> minFilters = new List<FilterDefinition<T>>();
                 foreach (var minItem in factorItem.ValueOperators)
                 {
+                    //  QueryFactorOperator.Value 接收类型是 Object
+                    //  数组、日期、布尔等类型POST提交时可能用序列化之后的字符串，
+                    //  所以这里可能需要根据类型特殊处理一下,转成对应的格式（数组、日期、布尔）
+                    //  例如：minItem.Value=DateTime.Parse(minItem.Value.ToString()); // 不为空 
+                    //  或者在方法 ToMogodbFilter 中处理
                     minFilters.Add(ToMogodbFilter<T>(minItem.QueryOperator, factorItem.Key, minItem.Value));
                 }
                 if (minFilters.Count == 1)

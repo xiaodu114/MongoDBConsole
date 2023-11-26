@@ -6,12 +6,16 @@ namespace DDZ.MongoDBConsole.Models
 {
     public class QueryModel2
     {
-        public string StrFilter { get; set; }
-
         /// <summary>
-        /// 这里使用 QueryUnit，而并非 QueryFactor
-        /// 就是为了实现 mongodb 的 $elemMatch 查询
+        /// 逻辑操作符：and、or
+        /// List<QueryUnit> QueryUnits 之间的逻辑关系
+        /// List<QueryModel2> QueryModels 之间的逻辑关系
+        /// QueryUnits和QueryModels二者只能存在一个，优先使用QueryUnits
         /// </summary>
-        public Dictionary<string, QueryUnit> KeyValues { get; set; }
+        public LogicalOperatorKind LogicalOperator { get; set; } = LogicalOperatorKind.And;
+
+        public List<QueryUnit> QueryUnits { get; set; }
+
+        public List<QueryModel2> QueryModels { get; set; }
     }
 }

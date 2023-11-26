@@ -11,130 +11,439 @@ namespace DDZ.MongoDBConsole.Test
     {
         public static string Test1()
         {
-            QueryModel2 qm = new QueryModel2
+            // ((1|2)&3)|((1&2&4)|5)
+            QueryModel2 queryModel = new QueryModel2()
             {
-                StrFilter = "((1|2)&3)|((1&2&4)|5)",
-                KeyValues = new Dictionary<string, QueryUnit>()
+                LogicalOperator = LogicalOperatorKind.Or,
+                QueryModels = new List<QueryModel2>()
                 {
-                    { "1",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_1", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_1_value" } } } } } },
-                    { "2",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_2", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_2_value" } } } } } },
-                    { "3",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_3", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_3_value" } } } } } },
-                    { "4",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_4", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_4_value" } } } } } },
-                    { "5",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_5", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_5_value" } } } } } },
+                    new QueryModel2()
+                    {
+                        QueryUnits=new List<QueryUnit>()
+                        {
+                            new QueryUnit()
+                            {
+                                LogicalOperator=LogicalOperatorKind.Or,
+                                Factors=new List<QueryFactor>()
+                                {
+                                    new QueryFactor()
+                                    {
+                                        Key="col_1",
+                                        ValueOperators=new List<QueryFactorOperator>()
+                                        {
+                                            new QueryFactorOperator(){ Value="col_1_value" }
+                                        }
+                                    },
+                                    new QueryFactor()
+                                    {
+                                        Key="col_2",
+                                        ValueOperators=new List<QueryFactorOperator>()
+                                        {
+                                            new QueryFactorOperator(){ Value="col_2_value" }
+                                        }
+                                    }
+                                }
+                            },
+                            new QueryUnit()
+                            {
+                                Factors=new List<QueryFactor>()
+                                {
+                                    new QueryFactor()
+                                    {
+                                        Key="col_3",
+                                        ValueOperators=new List<QueryFactorOperator>()
+                                        {
+                                            new QueryFactorOperator(){ Value="col_3_value" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new QueryModel2()
+                    {
+                        LogicalOperator = LogicalOperatorKind.Or,
+                        QueryUnits=new List<QueryUnit>()
+                        {
+                            new QueryUnit()
+                            {
+                                Factors=new List<QueryFactor>()
+                                {
+                                    new QueryFactor()
+                                    {
+                                        Key="col_1",
+                                        ValueOperators=new List<QueryFactorOperator>()
+                                        {
+                                            new QueryFactorOperator(){ Value="col_1_value" }
+                                        }
+                                    },
+                                    new QueryFactor()
+                                    {
+                                        Key="col_2",
+                                        ValueOperators=new List<QueryFactorOperator>()
+                                        {
+                                            new QueryFactorOperator(){ Value="col_2_value" }
+                                        }
+                                    },
+                                    new QueryFactor()
+                                    {
+                                        Key="col_4",
+                                        ValueOperators=new List<QueryFactorOperator>()
+                                        {
+                                            new QueryFactorOperator(){ Value="col_4_value" }
+                                        }
+                                    }
+                                }
+                            },
+                            new QueryUnit()
+                            {
+                                Factors=new List<QueryFactor>()
+                                {
+                                    new QueryFactor()
+                                    {
+                                        Key="col_5",
+                                        ValueOperators=new List<QueryFactorOperator>()
+                                        {
+                                            new QueryFactorOperator(){ Value="col_5_value" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                 }
             };
-            var filter = QueryModel2Helper<BsonDocument>.ToMongodbFilter(qm);
+            var filter = QueryModel2Helper<BsonDocument>.ToMongodbFilter(queryModel);
             return MongodbHelper.FilterDefinitionToJsonString(filter);
         }
 
         public static string Test2()
         {
-            QueryModel2 qm = new QueryModel2
+            //(1&((2&3&4&5)|6|7))|8
+            QueryModel2 queryModel = new QueryModel2()
             {
-                StrFilter = "(1&((2&3&4&5)|6|7))|8",
-                KeyValues = new Dictionary<string, QueryUnit>()
+                LogicalOperator = LogicalOperatorKind.Or,
+                QueryModels = new List<QueryModel2>()
                 {
-                    { "1",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_1", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_1_value" } } } } } },
-                    { "2",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_2", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_2_value" } } } } } },
-                    { "3",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_3", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_3_value" } } } } } },
-                    { "4",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_4", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_4_value" } } } } } },
-                    { "5",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_5", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_5_value" } } } } } },
-                    { "6",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_6", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_6_value" } } } } } },
-                    { "7",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_7", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_7_value" } } } } } },
-                    { "8",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_8", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_8_value" } } } } } },
+                    new QueryModel2()
+                    {
+                        QueryModels=new List<QueryModel2>()
+                        {
+                            new QueryModel2()
+                            {
+                                QueryUnits=new List<QueryUnit>()
+                                {
+                                    new QueryUnit()
+                                    {
+                                        Factors=new List<QueryFactor>()
+                                        {
+                                            new QueryFactor()
+                                            {
+                                                Key="col_1",
+                                                ValueOperators=new List<QueryFactorOperator>()
+                                                {
+                                                    new QueryFactorOperator(){ Value="col_1_value" }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            new QueryModel2()
+                            {
+                                LogicalOperator = LogicalOperatorKind.Or,
+                                QueryModels=new List<QueryModel2>()
+                                {
+                                    new QueryModel2()
+                                    {
+                                        QueryUnits=new List<QueryUnit>()
+                                        {
+                                            new QueryUnit()
+                                            {
+                                                Factors=new List<QueryFactor>()
+                                                {
+                                                    new QueryFactor()
+                                                    {
+                                                        Key="col_2",
+                                                        ValueOperators=new List<QueryFactorOperator>()
+                                                        {
+                                                            new QueryFactorOperator(){ Value="col_2_value" }
+                                                        }
+                                                    },
+                                                    new QueryFactor()
+                                                    {
+                                                        Key="col_3",
+                                                        ValueOperators=new List<QueryFactorOperator>()
+                                                        {
+                                                            new QueryFactorOperator(){ Value="col_3_value" }
+                                                        }
+                                                    },
+                                                    new QueryFactor()
+                                                    {
+                                                        Key="col_4",
+                                                        ValueOperators=new List<QueryFactorOperator>()
+                                                        {
+                                                            new QueryFactorOperator(){ Value="col_4_value" }
+                                                        }
+                                                    },
+                                                    new QueryFactor()
+                                                    {
+                                                        Key="col_5",
+                                                        ValueOperators=new List<QueryFactorOperator>()
+                                                        {
+                                                            new QueryFactorOperator(){ Value="col_5_value" }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    new QueryModel2()
+                                    {
+                                        QueryUnits=new List<QueryUnit>()
+                                        {
+                                            new QueryUnit()
+                                            {
+                                                Factors=new List<QueryFactor>()
+                                                {
+                                                    new QueryFactor()
+                                                    {
+                                                        Key="col_6",
+                                                        ValueOperators=new List<QueryFactorOperator>()
+                                                        {
+                                                            new QueryFactorOperator(){ Value="col_6_value" }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    new QueryModel2()
+                                    {
+                                        QueryUnits=new List<QueryUnit>()
+                                        {
+                                            new QueryUnit()
+                                            {
+                                                Factors=new List<QueryFactor>()
+                                                {
+                                                    new QueryFactor()
+                                                    {
+                                                        Key="col_7",
+                                                        ValueOperators=new List<QueryFactorOperator>()
+                                                        {
+                                                            new QueryFactorOperator(){ Value="col_7_value" }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new QueryModel2()
+                    {
+                        QueryUnits=new List<QueryUnit>()
+                        {
+                            new QueryUnit()
+                            {
+                                Factors=new List<QueryFactor>()
+                                {
+                                    new QueryFactor()
+                                    {
+                                        Key="col_8",
+                                        ValueOperators=new List<QueryFactorOperator>()
+                                        {
+                                            new QueryFactorOperator(){ Value="col_8_value" }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             };
-            var filter = QueryModel2Helper<BsonDocument>.ToMongodbFilter(qm);
+            var filter = QueryModel2Helper<BsonDocument>.ToMongodbFilter(queryModel);
             return MongodbHelper.FilterDefinitionToJsonString(filter);
         }
 
         public static string Test3()
         {
-            QueryModel2 qm = new QueryModel2
+            //1&2&3|(1&(4|5))
+            QueryModel2 queryModel = new QueryModel2()
             {
-                StrFilter = "1&2&3|(1&(4|5))",
-                KeyValues = new Dictionary<string, QueryUnit>()
+                LogicalOperator = LogicalOperatorKind.Or,
+                QueryModels = new List<QueryModel2>()
                 {
-                    { "1",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_1", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_1_value" } } } } } },
-                    { "2",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_2", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_2_value" } } } } } },
-                    { "3",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_3", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_3_value" } } } } } },
-                    { "4",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_4", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_4_value" } } } } } },
-                    { "5",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_5", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_5_value" } } } } } },
-                    { "6",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_6", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_6_value" } } } } } },
-                    { "7",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "col_7", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "col_7_value" } } } } } },
+                    new QueryModel2()
+                    {
+                        QueryUnits = new List<QueryUnit>()
+                        {
+                            new QueryUnit()
+                            {
+                                Factors=new List<QueryFactor>()
+                                {
+                                    new QueryFactor()
+                                    {
+                                        Key="col_1",
+                                        ValueOperators=new List<QueryFactorOperator>(){new QueryFactorOperator(){ Value= "col_1_value" } }
+                                    },
+                                    new QueryFactor()
+                                    {
+                                        Key="col_2",
+                                        ValueOperators=new List<QueryFactorOperator>(){new QueryFactorOperator(){ Value= "col_2_value" } }
+                                    },
+                                    new QueryFactor()
+                                    {
+                                        Key="col_3",
+                                        ValueOperators=new List<QueryFactorOperator>(){new QueryFactorOperator(){ Value= "col_3_value" } }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new QueryModel2()
+                    {
+                        QueryModels= new List<QueryModel2>()
+                        {
+                            new QueryModel2()
+                            {
+                                QueryUnits=new List<QueryUnit>()
+                                {
+                                    new QueryUnit()
+                                    {
+                                        Factors=new List<QueryFactor>()
+                                        {
+                                             new QueryFactor()
+                                             {
+                                                 Key="col_1",
+                                                 ValueOperators=new List<QueryFactorOperator>(){new QueryFactorOperator(){ Value= "col_1_value" } }
+                                             },
+                                        }
+                                    }
+                                }
+                            },
+                            new QueryModel2()
+                            {
+                                QueryUnits=new List<QueryUnit>()
+                                {
+                                    new QueryUnit()
+                                    {
+                                        LogicalOperator=LogicalOperatorKind.Or,
+                                        Factors=new List<QueryFactor>()
+                                        {
+                                             new QueryFactor()
+                                             {
+                                                 Key="col_4",
+                                                 ValueOperators=new List<QueryFactorOperator>(){new QueryFactorOperator(){ Value= "col_4_value" } }
+                                             },
+                                             new QueryFactor()
+                                             {
+                                                 Key="col_5",
+                                                 ValueOperators=new List<QueryFactorOperator>(){new QueryFactorOperator(){ Value= "col_5_value" } }
+                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             };
-            var filter = QueryModel2Helper<BsonDocument>.ToMongodbFilter(qm);
+            var filter = QueryModel2Helper<BsonDocument>.ToMongodbFilter(queryModel);
             return MongodbHelper.FilterDefinitionToJsonString(filter);
         }
 
         public static string Test4()
         {
-            QueryModel2 qm = new QueryModel2
+            // { "$and" : [{ "FormId" : "CarInfo" }, { "Level1" : "Apple" }, { "CreateDate" : { "$gte" : "2010-01-01", "$lte" : "2020-12-31" } }, { "FormValues" : { "$elemMatch" : { "key" : "key1", "value" : { "$ne" : "", "$lte" : "2020" } } } }, { "FormValues" : { "$elemMatch" : { "key" : "key2", "value" : { "$gte" : "2000", "$lte" : "2020" } } } }] }
+            QueryModel2 queryModel = new QueryModel2()
             {
-                StrFilter = "1&2&3&4&5",
-                KeyValues = new Dictionary<string, QueryUnit>()
+                QueryUnits = new List<QueryUnit>()
                 {
-                    { "1",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "FormId", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "CarInfo" } } } } } },
-                    { "2",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "Level1", ValueOperators=new List<QueryFactorOperator>() { new QueryFactorOperator() { Value= "Apple" } } } } } },
-                    { "3",new QueryUnit(){ Factors=new List<QueryFactor>(){ new QueryFactor() { Key= "CreateDate", ValueOperators=new List<QueryFactorOperator>()
+                    new QueryUnit()
+                    {
+                        Factors=new List<QueryFactor>()
+                        {
+                            new QueryFactor()
+                            {
+                                Key="FormId",
+                                ValueOperators=new List<QueryFactorOperator>()
+                                {
+                                    new QueryFactorOperator(){ Value="CarInfo" }
+                                }
+                            },
+                            new QueryFactor()
+                            {
+                                Key="Level1",
+                                ValueOperators=new List<QueryFactorOperator>()
+                                {
+                                    new QueryFactorOperator(){ Value="Apple" }
+                                }
+                            },
+                            new QueryFactor()
+                            {
+                                Key="CreateDate",
+                                ValueOperators=new List<QueryFactorOperator>()
                                 {
                                     new QueryFactorOperator(){ Value="2010-01-01", QueryOperator=QueryOperatorKind.GTE },
                                     new QueryFactorOperator(){ Value="2020-12-31", QueryOperator=QueryOperatorKind.LTE }
-                                }} } } },
-                    { "4", new QueryUnit()
-                           {
-                                ElemMatchName="FormValues",
-                                Factors=new List<QueryFactor>()
-                                {
-                                    new QueryFactor()
-                                    {
-                                        Key="key",
-                                        ValueOperators=new List<QueryFactorOperator>()
-                                        {
-                                            new QueryFactorOperator(){ Value="key1" }
-                                        }
-                                    },
-                                    new QueryFactor()
-                                    {
-                                        Key="value",
-                                        ValueOperators=new List<QueryFactorOperator>()
-                                        {
-                                            new QueryFactorOperator(){ Value="", QueryOperator=QueryOperatorKind.NE },
-                                            new QueryFactorOperator(){ Value="2020", QueryOperator=QueryOperatorKind.LTE }
-                                        }
-                                    }
                                 }
-                           }
+                            }
+                        }
                     },
-                    { "5", new QueryUnit()
-                           {
-                                ElemMatchName="FormValues",
-                                Factors=new List<QueryFactor>()
+                    new QueryUnit()
+                    {
+                        ElemMatchName="FormValues",
+                        Factors=new List<QueryFactor>()
+                        {
+                            new QueryFactor()
+                            {
+                                Key="key",
+                                ValueOperators=new List<QueryFactorOperator>()
                                 {
-                                    new QueryFactor()
-                                    {
-                                        Key="key",
-                                        ValueOperators=new List<QueryFactorOperator>()
-                                        {
-                                            new QueryFactorOperator(){ Value="key2" }
-                                        }
-                                    },
-                                    new QueryFactor()
-                                    {
-                                        Key="value",
-                                        ValueOperators=new List<QueryFactorOperator>()
-                                        {
-                                            new QueryFactorOperator(){ Value="2000", QueryOperator=QueryOperatorKind.GTE },
-                                            new QueryFactorOperator(){ Value="2020", QueryOperator=QueryOperatorKind.LTE }
-                                        }
-                                    }
+                                    new QueryFactorOperator(){ Value="key1" }
                                 }
-                           }
+                            },
+                            new QueryFactor()
+                            {
+                                Key="value",
+                                ValueOperators=new List<QueryFactorOperator>()
+                                {
+                                    new QueryFactorOperator(){ Value="", QueryOperator=QueryOperatorKind.NE },
+                                    new QueryFactorOperator(){ Value="2020", QueryOperator=QueryOperatorKind.LTE }
+                                }
+                            }
+                        }
+                    },
+                    new QueryUnit()
+                    {
+                        ElemMatchName="FormValues",
+                        Factors=new List<QueryFactor>()
+                        {
+                            new QueryFactor()
+                            {
+                                Key="key",
+                                ValueOperators=new List<QueryFactorOperator>()
+                                {
+                                    new QueryFactorOperator(){ Value="key2" }
+                                }
+                            },
+                            new QueryFactor()
+                            {
+                                Key="value",
+                                ValueOperators=new List<QueryFactorOperator>()
+                                {
+                                    new QueryFactorOperator(){ Value="2000", QueryOperator=QueryOperatorKind.GTE },
+                                    new QueryFactorOperator(){ Value="2020", QueryOperator=QueryOperatorKind.LTE }
+                                }
+                            }
+                        }
                     }
                 }
             };
-            var filter = QueryModel2Helper<BsonDocument>.ToMongodbFilter(qm);
+            var filter = QueryModel2Helper<BsonDocument>.ToMongodbFilter(queryModel);
             return MongodbHelper.FilterDefinitionToJsonString(filter);
         }
     }

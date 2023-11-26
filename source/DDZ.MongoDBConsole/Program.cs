@@ -7,15 +7,15 @@ namespace DDZ.MongoDBConsole
     {
         static void Main(string[] args)
         {
-            string queryModel1_1 = QueryModel2Test.Test1();
-            string queryModel1_2 = QueryModel2Test.Test2();
-            string queryModel1_3 = QueryModel2Test.Test3();
-            string queryModel1_4 = QueryModel2Test.Test4();
+            string queryModel1_1 = QueryModel1Test.Test1();
+            string queryModel1_2 = QueryModel1Test.Test2();
+            string queryModel1_3 = QueryModel1Test.Test3();
+            string queryModel1_4 = QueryModel1Test.Test4();
 
-            string queryModel2_1 = QueryModel3Test.Test1();
-            string queryModel2_2 = QueryModel3Test.Test2();
-            string queryModel2_3 = QueryModel3Test.Test3();
-            string queryModel2_4 = QueryModel3Test.Test4();
+            string queryModel2_1 = QueryModel2Test.Test1();
+            string queryModel2_2 = QueryModel2Test.Test2();
+            string queryModel2_3 = QueryModel2Test.Test3();
+            string queryModel2_4 = QueryModel2Test.Test4();
 
             bool b1 = queryModel1_1 == queryModel2_1;
             bool b2 = queryModel1_2 == queryModel2_2;

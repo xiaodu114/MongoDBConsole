@@ -100,6 +100,11 @@ namespace DDZ.MongoDBConsole.Models
         public object Value { get; set; }
 
         /// <summary>
+        /// 枚举类型(数值、字符串、布尔、集合等)，要查询的字段的值的类型
+        /// </summary>
+        public QueryValueKind ValueKind { get; set; }
+
+        /// <summary>
         /// 枚举类型(等值、模糊、大于等)，对要查询的字段的值进行什么操作
         /// </summary>
         public QueryOperatorKind QueryOperator { get; set; } = QueryOperatorKind.EQ;
@@ -114,11 +119,6 @@ namespace DDZ.MongoDBConsole.Models
         /// 要查询的字段的名称
         /// </summary>
         public string Key { get; set; }
-
-        /// <summary>
-        /// 枚举类型(数值、字符串、布尔、集合等)，要查询的字段的值的类型
-        /// </summary>
-        public QueryValueKind ValueKind { get; set; }
 
         /// <summary>
         /// 查询操作的集合，用于实现日期、数值的区间查询
